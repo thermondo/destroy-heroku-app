@@ -23,11 +23,10 @@ runs:
       env:
         HEROKU_API_KEY: ${{ inputs.heroku_api_key }}
       run: "
-        heroku info --app '${{ inputs.app_name }}' &&
-        {
-          heroku apps:destroy
-          --app '${{ inputs.app_name }}'
-          --confirm '${{ inputs.app_name }}' ;
+        if heroku info --app '${{ inputs.app_name }}'; then
           echo ::set-output name=exists::true ;
-        } || echo ::set-output name=exists::false
+          heroku apps:destroy --app '${{ inputs.app_name }}' --confirm '${{ inputs.app_name }}'
+        else
+          echo ::set-output name=exists::false
+        fi
       "
