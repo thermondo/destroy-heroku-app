@@ -22,11 +22,5 @@ runs:
       shell: bash
       env:
         HEROKU_API_KEY: ${{ inputs.heroku_api_key }}
-      run: "
-        if heroku info --app '${{ inputs.app_name }}'; then
-          echo ::set-output name=exists::true ;
-          heroku apps:destroy --app '${{ inputs.app_name }}' --confirm '${{ inputs.app_name }}'
-        else
-          echo ::set-output name=exists::false
-        fi
-      "
+        HEROKU_APP_NAME: ${{ inputs.app_name }}
+      run: ${{ github.action_path }}/destroy_app.sh
