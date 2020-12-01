@@ -1,0 +1,35 @@
+---
+name: 'Destroy Heroku Application'
+description: 'Destroys a given Heroku Application with a given name.'
+
+inputs:
+  heroku_api_key:
+    description: 'API key with the needed permissions'
+    required: true
+  app_name:
+    description: 'Application name to destroy'
+    required: true
+outputs:
+  success:
+    description: "true/false if the app was found and deleted"
+    value: ${{ steps.app-exists.outputs.exists }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: checking if app exists
+      id: app-exists
+      shell: bash
+      run: "
+        heroku info --app '${{ inputs.app_name }}' &&
+        echo ::set-output name=exists::true ||
+        echo ::set-output name=exists::false
+      "
+    - name: destroying application
+      if: steps.app-exists.outputs.exists == 'true'
+      shell: bash
+      run: "
+        heroku apps:destroy
+        --app '${{ inputs.app_name }}'
+        --confirm '${{ inputs.app_name }}'
+      "
