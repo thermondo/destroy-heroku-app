@@ -1,0 +1,26 @@
+---
+name: 'Destroy Heroku Application'
+description: 'Destroys a given Heroku Application with a given name.'
+
+inputs:
+  heroku_api_key:
+    description: 'API key with the needed permissions'
+    required: true
+  app_name:
+    description: 'Application name to destroy'
+    required: true
+outputs:
+  success:
+    description: "true/false if the app was found and deleted"
+    value: ${{ steps.destroy.outputs.exists }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: destroying heroku application
+      id: destroy
+      shell: bash
+      env:
+        HEROKU_API_KEY: ${{ inputs.heroku_api_key }}
+        HEROKU_APP_NAME: ${{ inputs.app_name }}
+      run: ${{ github.action_path }}/destroy_app.sh
