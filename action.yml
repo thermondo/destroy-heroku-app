@@ -17,6 +17,9 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: install Heroku CLI
+      shell: bash
+      run: sudo snap install --edge --classic heroku
     - name: destroying heroku application
       id: destroy
       shell: bash
