@@ -19,7 +19,8 @@ runs:
   steps:
     - name: install Heroku CLI
       shell: bash
-      run: sudo snap install --edge --classic heroku
+      # https://devcenter.heroku.com/articles/heroku-cli#install-with-ubuntu-debian-apt-get
+      run: curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - name: destroying heroku application
       id: destroy
       shell: bash
